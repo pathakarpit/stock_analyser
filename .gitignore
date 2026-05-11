@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+#testing folder
+testing/*
+
+#data folder
+data/*
