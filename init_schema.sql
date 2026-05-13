@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS fundamental_segment_score_store (
     solvency_score NUMERIC,
     momentum_score NUMERIC,
     capital_efficiency_score NUMERIC,
+    risk_performance_score NUMERIC,
     PRIMARY KEY (stock_id, date)
 );
 
