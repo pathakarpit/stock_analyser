@@ -117,3 +117,16 @@ CREATE TABLE IF NOT EXISTS request_queue_table (
     status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed')),
     PRIMARY KEY (user_id, requested_stock_id, date)
 );
+
+-- ==========================================
+-- 6. Company Profile Data
+-- ==========================================
+CREATE TABLE IF NOT EXISTS company_profile_static_store (
+    stock_id VARCHAR(20) PRIMARY KEY,
+    company_name VARCHAR(255),
+    sector VARCHAR(100),
+    industry VARCHAR(100),
+    description TEXT,
+    website VARCHAR(255),
+    last_updated DATE DEFAULT CURRENT_DATE
+);

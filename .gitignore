@@ -220,6 +220,7 @@ __marimo__/
 
 #testing folder
 testing/*
+testing1.py
 
 #data folder
 data/*
