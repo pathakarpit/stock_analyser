@@ -36,18 +36,21 @@ echo "[2/5] FUNDAMENTALS PHASE (Sequential)..."
 python -m app.math_engine.calc_fundamentals
 python -m app.math_engine.fundamental_segment_score_generator
 python -m app.math_engine.pattern_score_generator
+python -m app.math_engine.overall_fundamental_score_generator
 echo "✅ Fundamentals Complete: $(date)"
 
 echo "[3/5] SENTIMENT PHASE..."
-#python -m app.ai_engines.news_sentiment_generator
+python -m app.ai_engines.news_sentiment_generator
+python -m app.math_engine.agent_4_aggregator
+python -m app.ai_engines.agent_5_sector_aggregator
 echo "✅ Sentiment Complete: $(date)"
 
-echo "[4/5] FINAL SCORE GENERATOR..."
-python -m app.math_engine.overall_fundamental_score_generator
-echo "✅ Final Score Complete: $(date)"
+echo "[4/5] DECISION ENGINE (Agent 6 - Master Analyst)..."
+# python -m app.ai_engines.agent_6_decision_engine
+echo "✅ Decision Engine Complete: $(date)"
 
 echo "[5/5] OUTPUT GENERATOR..."
-#python -m app.output_generator
+# python -m app.output_generator
 echo "✅ Output Generator Complete: $(date)"
 
 echo "====================================================="
