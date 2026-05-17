@@ -26,32 +26,28 @@ conda activate stock_analyser
 cd "$PROJECT_DIR"
 export PYTHONPATH="$PROJECT_DIR"
 
-echo "[1/5] INGESTION PHASE (Sequential)..."
+echo "[1/4] INGESTION PHASE (Sequential)..."
 python -m app.data_ingestion.market_daily_data
 python -m app.data_ingestion.news_data
 python -m app.data_ingestion.fundamental_data
 echo "✅ Ingestion Complete: $(date)"
 
-echo "[2/5] FUNDAMENTALS PHASE (Sequential)..."
+echo "[2/4] FUNDAMENTALS PHASE (Sequential)..."
 python -m app.math_engine.calc_fundamentals
 python -m app.math_engine.fundamental_segment_score_generator
 python -m app.math_engine.pattern_score_generator
 python -m app.math_engine.overall_fundamental_score_generator
 echo "✅ Fundamentals Complete: $(date)"
 
-echo "[3/5] SENTIMENT PHASE..."
-python -m app.ai_engines.news_sentiment_generator
-python -m app.math_engine.agent_4_aggregator
-python -m app.ai_engines.agent_5_sector_aggregator
+echo "[3/4] SENTIMENT PHASE..."
+python -m app.ai_engine.news_sentiment_generator
+python -m app.math_engine.agent4_aggregator
+python -m app.ai_engine.agent_5_sector_aggregator
 echo "✅ Sentiment Complete: $(date)"
 
-echo "[4/5] DECISION ENGINE (Agent 6 - Master Analyst)..."
-# python -m app.ai_engines.agent_6_decision_engine
+echo "[4/4] DECISION ENGINE (Agent 6 - Master Analyst)..."
+python -m app.ai_engine.decision_engine
 echo "✅ Decision Engine Complete: $(date)"
-
-echo "[5/5] OUTPUT GENERATOR..."
-# python -m app.output_generator
-echo "✅ Output Generator Complete: $(date)"
 
 echo "====================================================="
 echo "🏁 DAILY PIPELINE COMPLETE: $(date)"

@@ -51,7 +51,7 @@ def fetch_daily_prices(tickers):
                 index=False, 
                 method=postgres_upsert
             )
-            print(f"SUCCESS: Updated daily price for {ticker}.")
+            print(f"SUCCESS: Updated daily price for {ticker}. latest date: {df_clean['date'].iloc[0]} close: {df_clean['close'].iloc[0]} ")
             
         except Exception as e:
             print(f"ERROR: Failed daily update for {ticker}. Reason: {e}")

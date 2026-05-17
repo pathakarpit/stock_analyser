@@ -1,6 +1,6 @@
 =====================================================
 FILE: run_daily.sh
-RUN INITIATED: Sat May 16 06:37:07 AM UTC 2026
+RUN INITIATED: Sat May 16 06:12:19 PM UTC 2026
 =====================================================
 [1/5] INGESTION PHASE (Sequential)...
 Engine(postgresql://sunny:***@172.18.0.5:5432/stock_analyser_project_db)
@@ -26,6 +26,28 @@ SUCCESS: Updated daily price for HINDUNILVR.NS.
 Fetching latest close for LT.NS...
 SUCCESS: Updated daily price for LT.NS.
 Daily price update complete!
+
+📰 Booting News Ingestion Engine (Agent 1) for 2026-05-16...
+   Fetching news for RELIANCE.NS...
+      [+] SUCCESS: Saved 10 articles to ./data/RELIANCE.NS/news/news_2026-05-16.json (Sector: Energy)
+   Fetching news for TCS.NS...
+      [+] SUCCESS: Saved 10 articles to ./data/TCS.NS/news/news_2026-05-16.json (Sector: Technology)
+   Fetching news for HDFCBANK.NS...
+      [+] SUCCESS: Saved 10 articles to ./data/HDFCBANK.NS/news/news_2026-05-16.json (Sector: Financial Services)
+   Fetching news for ICICIBANK.NS...
+      [+] SUCCESS: Saved 10 articles to ./data/ICICIBANK.NS/news/news_2026-05-16.json (Sector: Financial Services)
+   Fetching news for INFY.NS...
+      [+] SUCCESS: Saved 10 articles to ./data/INFY.NS/news/news_2026-05-16.json (Sector: Technology)
+   Fetching news for SBIN.NS...
+      [+] SUCCESS: Saved 10 articles to ./data/SBIN.NS/news/news_2026-05-16.json (Sector: Financial Services)
+   Fetching news for BHARTIARTL.NS...
+      [+] SUCCESS: Saved 10 articles to ./data/BHARTIARTL.NS/news/news_2026-05-16.json (Sector: Communication Services)
+   Fetching news for ITC.NS...
+      [+] SUCCESS: Saved 2 articles to ./data/ITC.NS/news/news_2026-05-16.json (Sector: Consumer Defensive)
+   Fetching news for HINDUNILVR.NS...
+      [+] SUCCESS: Saved 10 articles to ./data/HINDUNILVR.NS/news/news_2026-05-16.json (Sector: Consumer Defensive)
+   Fetching news for LT.NS...
+      [+] SUCCESS: Saved 10 articles to ./data/LT.NS/news/news_2026-05-16.json (Sector: Industrials)
 Executing STATIC FUNDAMENTALS local fetch for 10 tickers...
 Fetching base fundamentals for RELIANCE.NS...
    SUCCESS: Saved base fundamentals to ./data/RELIANCE.NS/fundamentals/fundament_fetched_2026-05-16.json
@@ -47,7 +69,7 @@ Fetching base fundamentals for HINDUNILVR.NS...
    SUCCESS: Saved base fundamentals to ./data/HINDUNILVR.NS/fundamentals/fundament_fetched_2026-05-16.json
 Fetching base fundamentals for LT.NS...
    SUCCESS: Saved base fundamentals to ./data/LT.NS/fundamentals/fundament_fetched_2026-05-16.json
-✅ Ingestion Complete: Sat May 16 06:37:14 AM UTC 2026
+✅ Ingestion Complete: Sat May 16 06:12:43 PM UTC 2026
 [2/5] FUNDAMENTALS PHASE (Sequential)...
 Engine(postgresql://sunny:***@172.18.0.5:5432/stock_analyser_project_db)
 Executing ADVANCED MATH & LOGIC ENGINE for 10 tickers...
@@ -85,32 +107,82 @@ Engine(postgresql://sunny:***@172.18.0.5:5432/stock_analyser_project_db)
 🕒 EXECUTION TIMING PROFILER (Milliseconds)
 ================================================================================
      stock_id  t_valuation_ms  t_profitability_ms  t_solvency_ms  t_efficiency_ms  t_momentum_ms  t_risk_ms  t_total_ms
-  HDFCBANK.NS           0.432               0.020          0.014            0.019          0.058      0.015       0.571
-       ITC.NS           0.383               0.009          0.008            0.005          0.019      0.006       0.435
-BHARTIARTL.NS           0.291               0.012          0.021            0.005          0.033      0.011       0.380
-       TCS.NS           0.256               0.008          0.019            0.006          0.020      0.006       0.319
-      SBIN.NS           0.254               0.007          0.005            0.006          0.024      0.006       0.314
-HINDUNILVR.NS           0.230               0.011          0.017            0.007          0.024      0.008       0.303
-        LT.NS           0.242               0.007          0.016            0.006          0.020      0.005       0.301
-      INFY.NS           0.216               0.011          0.023            0.009          0.025      0.006       0.295
-  RELIANCE.NS           0.230               0.009          0.015            0.006          0.021      0.005       0.292
- ICICIBANK.NS           0.207               0.010          0.007            0.008          0.027      0.008       0.272
+BHARTIARTL.NS           0.339               0.011          0.022            0.006          0.034      0.011       0.432
+ ICICIBANK.NS           0.263               0.010          0.012            0.010          0.029      0.011       0.342
+       ITC.NS           0.245               0.009          0.007            0.005          0.045      0.008       0.324
+      INFY.NS           0.238               0.010          0.020            0.008          0.027      0.008       0.318
+        LT.NS           0.245               0.007          0.015            0.006          0.019      0.005       0.304
+  RELIANCE.NS           0.219               0.011          0.020            0.009          0.024      0.008       0.297
+HINDUNILVR.NS           0.208               0.010          0.020            0.008          0.028      0.008       0.289
+  HDFCBANK.NS           0.190               0.008          0.005            0.007          0.022      0.007       0.245
+      SBIN.NS           0.014               0.010          0.007            0.005          0.008      0.006       0.053
+       TCS.NS           0.013               0.008          0.009            0.005          0.008      0.007       0.052
 ================================================================================
 
-🏁 BATCH COMPLETE. Total Pipeline Execution Time: 0.0634 seconds.
+🏁 BATCH COMPLETE. Total Pipeline Execution Time: 0.0654 seconds.
 
 Engine(postgresql://sunny:***@172.18.0.5:5432/stock_analyser_project_db)
 
 🚀 Booting Pattern Analyst Engine for 2026-05-16...
    [!] No joined data found for TODAY (2026-05-16).
-✅ Fundamentals Complete: Sat May 16 06:37:17 AM UTC 2026
-[3/5] SENTIMENT PHASE...
-✅ Sentiment Complete: Sat May 16 06:37:17 AM UTC 2026
-[4/5] FINAL SCORE GENERATOR...
 Engine(postgresql://sunny:***@172.18.0.5:5432/stock_analyser_project_db)
 
 🎯 Booting Overall Score Aggregator for 2026-05-16...
    [!] No joined segment/pattern data found for TODAY (2026-05-16).
-✅ Final Score Complete: Sat May 16 06:37:17 AM UTC 2026
+✅ Fundamentals Complete: Sat May 16 06:12:46 PM UTC 2026
+[3/5] SENTIMENT PHASE...
+Engine(postgresql://sunny:***@172.18.0.5:5432/stock_analyser_project_db)
+
+🧮 Booting Agent 4 (Time-Decay Aggregator) for 2026-05-16...
+   Calculating aggregate score for RELIANCE.NS using 5 historical articles...
+      [+] Final Aggregate Sentiment for RELIANCE.NS: 42.79/100
+   Calculating aggregate score for TCS.NS using 5 historical articles...
+      [+] Final Aggregate Sentiment for TCS.NS: 48.39/100
+   Calculating aggregate score for HDFCBANK.NS using 3 historical articles...
+      [+] Final Aggregate Sentiment for HDFCBANK.NS: 84.12/100
+   Calculating aggregate score for ICICIBANK.NS using 1 historical articles...
+      [+] Final Aggregate Sentiment for ICICIBANK.NS: 90.0/100
+   Calculating aggregate score for INFY.NS using 5 historical articles...
+      [+] Final Aggregate Sentiment for INFY.NS: 30.06/100
+   Calculating aggregate score for SBIN.NS using 3 historical articles...
+      [+] Final Aggregate Sentiment for SBIN.NS: 24.31/100
+   Calculating aggregate score for BHARTIARTL.NS using 5 historical articles...
+      [+] Final Aggregate Sentiment for BHARTIARTL.NS: 77.74/100
+   [-] No recent news within 30 days for ITC.NS.
+   Calculating aggregate score for HINDUNILVR.NS using 1 historical articles...
+      [+] Final Aggregate Sentiment for HINDUNILVR.NS: 85.0/100
+   Calculating aggregate score for LT.NS using 1 historical articles...
+      [+] Final Aggregate Sentiment for LT.NS: 15.0/100
+
+🌐 Booting Agent 5 (Sector Macro Aggregator) for 2026-05-16...
+   [i] Sourcing from RAW news files to capture full macro context.
+   Compiled raw news for 6 distinct sectors. Requesting Macro Analysis...
+      [+] Sector: Energy | Processed 10 raw events | Macro Score: 25/100
+      [+] Sector: Technology | Processed 20 raw events | Macro Score: 20/100
+      [+] Sector: Financial Services | Processed 30 raw events | Macro Score: 80/100
+      [+] Sector: Communication Services | Processed 10 raw events | Macro Score: 90/100
+      [+] Sector: Consumer Defensive | Processed 12 raw events | Macro Score: 38/100
+      [!] AI Processing Error for Industrials sector: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\nPlease retry in 7.523153112s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '7s'}]}}
+=====================================================
+🏁 AGENT 5 COMPLETE: Sector macro scores saved locally.
+=====================================================
+✅ Sentiment Complete: Sat May 16 06:13:52 PM UTC 2026
+[4/5] DECISION ENGINE (Agent 6 - Master Analyst)...
+Engine(postgresql://sunny:***@172.18.0.5:5432/stock_analyser_project_db)
+
+🧠 Executing Agent 6 (Decision Engine) for RELIANCE.NS...
+   [User Profile] Risk: Moderate | Horizon: Swing Trader
+   [!] AI Processing Error in Decision Engine for RELIANCE.NS: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\nPlease retry in 5.551257105s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '5s'}]}}
+
+--- FINAL JSON OUTPUT ---
+{
+  "final_actionable_score": 0,
+  "recommendation": "ERROR",
+  "thesis": "The Decision Engine failed to process the request due to an AI generation error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 5.551257105s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '5s'}]}}"
+}
+✅ Decision Engine Complete: Sat May 16 06:13:54 PM UTC 2026
 [5/5] OUTPUT GENERATOR...
-/home/sunny/miniconda3/envs/stock_analyser/bin/python: No module named app.output_generator
+✅ Output Generator Complete: Sat May 16 06:13:54 PM UTC 2026
+=====================================================
+🏁 DAILY PIPELINE COMPLETE: Sat May 16 06:13:54 PM UTC 2026
+=====================================================
