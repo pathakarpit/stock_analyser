@@ -1,14 +1,17 @@
 {
     "default_portfolio": [
-        "RELIANCE.NS", 
-        "TCS.NS", 
-        "HDFCBANK.NS", 
-        "ICICIBANK.NS", 
-        "INFY.NS", 
-        "SBIN.NS", 
-        "BHARTIARTL.NS", 
-        "ITC.NS", 
-        "HINDUNILVR.NS", 
-        "LT.NS"
+        "RELIANCE.NS",
+        "TCS.NS",
+        "HDFCBANK.NS",
+        "ICICIBANK.NS",
+        "INFY.NS",
+        "SBIN.NS",
+        "BHARTIARTL.NS",
+        "ITC.NS",
+        "HINDUNILVR.NS",
+        "LT.NS",
+        "JIOFIN.NS",
+        "PIDILITIND.NS",
+        "TRENT.NS"
     ]
 }

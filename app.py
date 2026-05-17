@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import sys
 import os
+import time
 
 # Import modularized backend engine, configs, and plotters
 try:
@@ -82,6 +83,47 @@ def show_math_modal(segment_key):
     st.divider()
     st.caption(f"**Engine Mechanics:** {ctx['math_details']}")
 
+# --- UI: REQUEST DIALOG ---
+@st.dialog("➕ Request New Stocks")
+def request_stock_dialog():
+    st.markdown("### Asset Expansion Request")
+    st.write("Enter Stock Names or IDs (e.g., RELIANCE, Tata Motors, AAPL)")
+    raw_input = st.text_area(
+        "Separate multiple entries with commas", 
+        placeholder="e.g., NESTLEIND, ASIANPAINT, Google",
+        help="System will resolve tickers and backfill data within 4 hours."
+    )
+    
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        if st.button("Submit", type="primary"):
+            if raw_input.strip():
+                try:
+                    os.makedirs("data", exist_ok=True)
+                    queue_path = os.path.join("data", "request_queue.txt")
+                    with open(queue_path, "a", encoding="utf-8") as f:
+                        f.write(f"{raw_input.strip()}\n")
+                    
+                    st.toast("Request Logged Successfully!", icon="✅")
+                    # Refined Compact Success Message
+                    st.markdown(
+                        """
+                        <div style="padding:10px; border-radius:5px; background-color:rgba(0,204,150,0.1); 
+                        border:1px solid #00CC96; color:#00CC96; font-size:14px; text-align:center; margin:10px 0;">
+                        ✅ <b>Request Submitted:</b> Added to the 4-hour background queue.
+                        </div>
+                        """, unsafe_allow_html=True
+                    )
+                    time.sleep(1.5)
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Write Error: {e}")
+            else:
+                st.warning("Please enter a name.")
+    with col2:
+        if st.button("Cancel"):
+            st.rerun()
+
 # --- UI: LANDING PAGE ---
 def render_landing_page():
     st.title("🌐 Macro Market Overview")
@@ -93,7 +135,14 @@ def render_landing_page():
         st.markdown(f"### Overall Market Sentiment: <span style='color:{color}'>{market_score}/100 ({mood})</span>", unsafe_allow_html=True)
 
     st.divider()
-    st.subheader("Equities Database")
+    
+    col_db, col_req = st.columns([3, 1])
+    with col_db:
+        st.subheader("Equities Database")
+    with col_req:
+        st.write("") 
+        if st.button("➕ Request More Stocks", use_container_width=True):
+            request_stock_dialog()
     
     df = fetch_landing_page_model()
     if df is None or df.empty:
@@ -142,136 +191,76 @@ def render_detail_page():
     
     tab1, tab2, tab3, tab4 = st.tabs(["🏢 About", "📊 Fundamentals", "📰 News & Sentiment", "🧠 AI Verdict"])
     
-    # --- TAB 1: ABOUT ---
     with tab1:
         st.subheader("Company Overview")
-        st.write(profile.get('description', 'No detailed description available in the database.'))
+        st.write(profile.get('description', 'No detailed description available.'))
 
-    # --- TAB 2: FUNDAMENTALS ---
     with tab2:
         st.subheader("Interactive Fundamental Weighting")
         segments = fetch_fundamental_segments_model(stock)
-        
         if segments:
-            val_score = float(segments.get('valuation_score', 0))
-            prof_score = float(segments.get('profitability_score', 0))
-            solv_score = float(segments.get('solvency_score', 0))
-            mom_score = float(segments.get('momentum_score', 0))
-            cap_score = float(segments.get('capital_efficiency_score', 0))
+            val_score, prof_score, solv_score, mom_score, cap_score = [
+                float(segments.get(k, 0)) for k in [
+                    'valuation_score', 'profitability_score', 'solvency_score', 
+                    'momentum_score', 'capital_efficiency_score'
+                ]
+            ]
             
             st.markdown("**Adjust Segment Relative Importance (0-10):**")
-            wc1, wc2, wc3, wc4, wc5 = st.columns(5)
-            
-            with wc1: w_val = st.slider("Valuation", 0, 10, 5, key="w_val", label_visibility="collapsed")
-            with wc2: w_prof = st.slider("Profitability", 0, 10, 5, key="w_prof", label_visibility="collapsed")
-            with wc3: w_solv = st.slider("Solvency", 0, 10, 5, key="w_solv", label_visibility="collapsed")
-            with wc4: w_mom = st.slider("Momentum", 0, 10, 5, key="w_mom", label_visibility="collapsed")
-            with wc5: w_cap = st.slider("Cap Efficiency", 0, 10, 5, key="w_cap", label_visibility="collapsed")
+            wc = st.columns(5)
+            weights = []
+            for i, label in enumerate(['Valuation', 'Profitability', 'Solvency', 'Momentum', 'Cap Efficiency']):
+                weights.append(wc[i].slider(label, 0, 10, 5, key=f"w_{i}", label_visibility="collapsed"))
                 
-            total_weight = w_val + w_prof + w_solv + w_mom + w_cap
-            if total_weight == 0: total_weight = 1
-                
-            pct_val, pct_prof, pct_solv, pct_mom, pct_cap = [(w / total_weight) * 100 for w in [w_val, w_prof, w_solv, w_mom, w_cap]]
-
-            with wc1: 
-                if st.button("📖 Valuation", key="btn_val", use_container_width=True): show_math_modal("valuation")
-                st.caption(f"**Weight: {pct_val:.1f}%**")
-            with wc2: 
-                if st.button("📖 Profitability", key="btn_prof", use_container_width=True): show_math_modal("profitability")
-                st.caption(f"**Weight: {pct_prof:.1f}%**")
-            with wc3: 
-                if st.button("📖 Solvency", key="btn_solv", use_container_width=True): show_math_modal("solvency")
-                st.caption(f"**Weight: {pct_solv:.1f}%**")
-            with wc4: 
-                if st.button("📖 Momentum", key="btn_mom", use_container_width=True): show_math_modal("momentum")
-                st.caption(f"**Weight: {pct_mom:.1f}%**")
-            with wc5: 
-                if st.button("📖 Cap Efficiency", key="btn_cap", use_container_width=True): show_math_modal("capital_efficiency")
-                st.caption(f"**Weight: {pct_cap:.1f}%**")
+            total_weight = sum(weights) if sum(weights) > 0 else 1
+            custom_score = sum([s * w for s, w in zip([val_score, prof_score, solv_score, mom_score, cap_score], weights)]) / total_weight
             
-            custom_score = ((val_score * w_val) + (prof_score * w_prof) + (solv_score * w_solv) + (mom_score * w_mom) + (cap_score * w_cap)) / total_weight 
             label, color = get_score_context(custom_score, 10)
             st.markdown(f"#### Your Custom Weighted Score: <span style='color:{color}'>{custom_score:.1f}/10 ({label})</span>", unsafe_allow_html=True)
-            st.divider()
-
-            scores = [val_score, prof_score, solv_score, mom_score, cap_score]
-            _, chart_color = get_score_context(sum(scores)/len(scores), 10)
-            graph_col, values_col = st.columns([2, 1])
             
+            st.divider()
+            scores = [val_score, prof_score, solv_score, mom_score, cap_score]
+            graph_col, values_col = st.columns([2, 1])
             with graph_col:
-                fig = generate_radar_chart(scores, chart_color)
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(generate_radar_chart(scores, color), use_container_width=True)
             with values_col:
                 st.markdown("#### Segment Output")
                 for cat, s in zip(['Valuation', 'Profitability', 'Solvency', 'Momentum', 'Cap Efficiency'], scores):
-                    _, sc = get_score_context(s, 10)
-                    st.markdown(f"<div class='segment-value-box'><span>{cat}</span><span style='color:{sc};'>{s:.1f} / 10</span></div>", unsafe_allow_html=True)
-        else:
-            st.warning("Fundamental segment data missing.")
+                    _, sc_color = get_score_context(s, 10)
+                    st.markdown(f"<div class='segment-value-box'><span>{cat}</span><span style='color:{sc_color};'>{s:.1f} / 10</span></div>", unsafe_allow_html=True)
 
-        st.divider()
-        st.subheader("Raw Calculated Metrics")
-        calc_data = fetch_calculated_fundamentals_model(stock)
-        if calc_data:
-            clean_calc = {k: v for k, v in calc_data.items() if k not in ['stock_id', 'date', 'id']}
-            cols = st.columns(3) 
-            for i, (key, val) in enumerate(clean_calc.items()):
-                display_val = round(val, 2) if isinstance(val, (int, float)) else val
-                edu_data = get_educational_context(key)
-                with cols[i % 3]:
-                    if edu_data:
-                        with st.expander(f"**{edu_data['title']}** : {display_val}"):
-                            st.markdown(f"**Definition:** {edu_data['def']}")
-                            st.markdown(f"**Interpretation:** {edu_data['interp']}")
-                    else:
-                        st.metric(label=key.replace('_', ' ').title(), value=display_val)
-
-    # --- TAB 3: NEWS (REFACTORED FOR CSV) ---
     with tab3:
         st.subheader(f"📰 Recent News & AI Sentiment for {stock}")
         news_file = os.path.join("data", stock, "news", "news_score.csv")
-        
         if os.path.exists(news_file):
             try:
                 df_news = pd.read_csv(news_file)
                 if not df_news.empty:
-                    latest_score = df_news.iloc[-1]['score']
-                    label, color = get_score_context(latest_score, 100)
-                    st.metric(label="Latest Aggregated Sentiment", value=f"{latest_score}/100", delta=label)
-                    
+                    latest = df_news.iloc[-1]['score']
+                    _, sc_color = get_score_context(latest, 100)
+                    st.metric("Latest Aggregated Sentiment", f"{latest}/100")
                     st.divider()
-                    st.markdown("### Historical News events")
-                    df_display = df_news.sort_values(by='capture_date', ascending=False)
-                    for _, row in df_display.iterrows():
+                    for _, row in df_news.sort_values(by='capture_date', ascending=False).iterrows():
                         with st.container(border=True):
-                            sc = row['score']
-                            _, sc_color = get_score_context(sc, 100)
-                            st.markdown(f"**📅 {row['news_date']}** | Sector: `{row['sector']}` | Score: <span style='color:{sc_color}; font-weight:bold'>{sc}</span>", unsafe_allow_html=True)
+                            st.markdown(f"**📅 {row['news_date']}** | Sector: `{row['sector']}`")
                             st.write(row['overview'])
-                else:
-                    st.info("News file is empty.")
-            except Exception as e:
-                st.error(f"Error: {e}")
-        else:
-            st.warning(f"No localized news data found at {news_file}.")
+                else: st.info("News file is empty.")
+            except Exception as e: st.error(f"CSV Read Error: {e}")
+        else: st.warning("No news data found.")
 
-    # --- TAB 4: AI VERDICT ---
     with tab4:
         st.subheader("🧠 AI Quantitative Verdict")
         with st.form("decision_engine_form"):
             risk = st.selectbox("Risk Tolerance", ["Conservative", "Moderate", "Aggressive"])
             horizon = st.selectbox("Investment Horizon", ["Day Trader", "Swing Trader", "Long-term"])
-            submitted = st.form_submit_button("Generate Institutional Thesis", type="primary")
-            
-            if submitted:
+            if st.form_submit_button("Generate Institutional Thesis", type="primary"):
                 with st.spinner("AI is synthesizing data..."):
                     result = generate_investment_thesis(stock, risk, horizon)
-                    st.divider()
-                    rec = result.get('recommendation', 'ERROR')
+                    rec = result.get('recommendation', 'HOLD')
                     rec_color = "#00CC96" if rec == "BUY" else "#EF553B" if rec == "SELL" else "#FFA15A"
                     st.markdown(f"### Recommendation: <span style='color:{rec_color}'>{rec}</span>", unsafe_allow_html=True)
-                    st.progress(result.get('final_actionable_score', 0) / 100, text=f"Confidence Score: {result.get('final_actionable_score', 0)}/100")
-                    st.info(f"**Thesis:** {result.get('thesis', 'No thesis generated.')}")
+                    st.progress(result.get('final_actionable_score', 0)/100, text=f"Confidence: {result.get('final_actionable_score', 0)}/100")
+                    st.info(f"**Thesis:** {result.get('thesis', 'N/A')}")
 
 # --- MAIN EXECUTION ---
 if st.session_state.selected_stock is None:
