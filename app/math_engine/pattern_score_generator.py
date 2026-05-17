@@ -110,20 +110,27 @@ def execute_pattern_engine(tickers):
     print(f"\n🚀 Booting Pattern Analyst Engine for {today_date}...")
     ticker_list = "','".join(tickers)
     
+    # FIX: Use a CTE and ROW_NUMBER() to grab the most recent data point for each stock,
+    # safely bypassing weekends and market holidays.
     query = f"""
-        SELECT 
-            c.stock_id, c.sma, c.ema, c.rsi, c.macd, p.close
-        FROM calculated_fundamental_store c
-        INNER JOIN stock_price_data p 
-            ON c.stock_id = p.stock_id AND c.date = p.date
-        WHERE c.stock_id IN ('{ticker_list}')
-        AND c.date = '{today_date}'
+        WITH LatestData AS (
+            SELECT 
+                c.stock_id, c.sma, c.ema, c.rsi, c.macd, p.close,
+                ROW_NUMBER() OVER(PARTITION BY c.stock_id ORDER BY c.date DESC) as rn
+            FROM calculated_fundamental_store c
+            INNER JOIN stock_price_data p 
+                ON c.stock_id = p.stock_id AND c.date = p.date
+            WHERE c.stock_id IN ('{ticker_list}')
+        )
+        SELECT stock_id, sma, ema, rsi, macd, close
+        FROM LatestData
+        WHERE rn = 1
     """
     
     try:
         df_raw = pd.read_sql(query, engine)
         if df_raw.empty:
-            print(f"   [!] No joined data found for TODAY ({today_date}).")
+            print("   [!] No historical data found to process.")
             return
 
         rows_to_process = df_raw.to_dict('records')
@@ -131,6 +138,7 @@ def execute_pattern_engine(tickers):
         timing_records = []
 
         with concurrent.futures.ProcessPoolExecutor(max_workers=10) as executor:
+            # We still pass 'today_date' to process_pattern so the score is saved with today's run date
             futures = [executor.submit(process_pattern, row, today_date) for row in rows_to_process]
             for future in concurrent.futures.as_completed(futures):
                 try:

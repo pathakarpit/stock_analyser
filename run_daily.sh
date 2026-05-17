@@ -45,7 +45,7 @@ python -m app.math_engine.agent4_aggregator
 python -m app.ai_engine.agent_5_sector_aggregator
 echo "✅ Sentiment Complete: $(date)"
 
-echo "[4/4] DECISION ENGINE (Agent 6 - Master Analyst)..."
+echo "[4/4] DECISION ENGINE (Master Analyst)..."
 python -m app.ai_engine.decision_engine
 echo "✅ Decision Engine Complete: $(date)"
 
