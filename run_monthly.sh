@@ -7,7 +7,7 @@ PROJECT_DIR="/home/sunny/workspace/project_stock_analyser"
 CONDA_DIR="/home/sunny/miniconda3"
 
 # 2. Configure Dual Logging (Terminal + File Overwrite)
-LOG_FILE="$PROJECT_DIR/logs.txt"
+LOG_FILE="$PROJECT_DIR/logs_monthly.txt"
 exec > >(tee "$LOG_FILE") 2>&1
 
 # 3. CRITICAL: Force Python to print immediately without buffering

@@ -113,18 +113,24 @@ def execute_pattern_engine(tickers):
     # FIX: Use a CTE and ROW_NUMBER() to grab the most recent data point for each stock,
     # safely bypassing weekends and market holidays.
     query = f"""
-        WITH LatestData AS (
-            SELECT 
-                c.stock_id, c.sma, c.ema, c.rsi, c.macd, p.close,
-                ROW_NUMBER() OVER(PARTITION BY c.stock_id ORDER BY c.date DESC) as rn
-            FROM calculated_fundamental_store c
-            INNER JOIN stock_price_data p 
-                ON c.stock_id = p.stock_id AND c.date = p.date
-            WHERE c.stock_id IN ('{ticker_list}')
+        WITH LatestFundamentals AS (
+            SELECT stock_id, sma, ema, rsi, macd, date,
+                   ROW_NUMBER() OVER(PARTITION BY stock_id ORDER BY date DESC) as rn
+            FROM calculated_fundamental_store
+            WHERE stock_id IN ('{ticker_list}')
+        ),
+        LatestPrices AS (
+            SELECT stock_id, close, date,
+                   ROW_NUMBER() OVER(PARTITION BY stock_id ORDER BY date DESC) as rn
+            FROM stock_price_data
+            WHERE stock_id IN ('{ticker_list}')
         )
-        SELECT stock_id, sma, ema, rsi, macd, close
-        FROM LatestData
-        WHERE rn = 1
+        SELECT 
+            f.stock_id, f.sma, f.ema, f.rsi, f.macd, 
+            p.close, p.date as price_date, f.date as math_date
+        FROM LatestFundamentals f
+        LEFT JOIN LatestPrices p ON f.stock_id = p.stock_id
+        WHERE f.rn = 1 AND p.rn = 1
     """
     
     try:
