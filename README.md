@@ -83,4 +83,4 @@ The system is designed for both local research and server-based scheduled execut
 ## 👤 About the Developer
 I am a Data Scientist & Software Engineer focused on the intersection of **Algorithmic Finance**, **Quantitative Mathematics**, and **Artificial Intelligence**. I build tools that turn market noise into actionable intelligence.
 
-**Connect with me:** [LinkedIn](https://www.linkedin.com/in/your-profile/) | [Portfolio](https://your-portfolio.com)
+**Connect with me:** [LinkedIn](https://www.linkedin.com/in/pathakarpit/) | [Portfolio](https://patech.in)
