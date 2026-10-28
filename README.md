@@ -36,7 +36,7 @@ While the system handles massive amounts of historical data, its true power lies
 
 | Layer | Technology / Module focus |
 | :--- | :--- |
-| **Language** | Python 3.x |
+| **Language** | Python 3.12 |
 | **Database** | SQL (via `init_schema.sql`), custom `db_utils` |
 | **AI/NLP** | Custom Sentiment Analyzers & Agentic Logic |
 | **Task Management** | Queue Processor |
